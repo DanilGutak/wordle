@@ -1,12 +1,13 @@
-from wordle import check_letters
 from wordle import choose_word
 from wordle import check_guess
+from wordle import search_letter
 import tkinter as tk
 
 class Wordle:
     j = 0
     word = "zoomy"
     i = 0
+    answer = list("00000")
 
     def __init__(self, root):
         self.root = root
@@ -35,7 +36,7 @@ class Wordle:
                 letter = ' '
                 x1, y1 = col * 50 + 1, row * 50 + 1
                 x2, y2 = x1 + 50, y1 + 50
-                self.canvas.create_rectangle(x1, y1, x2, y2, outline="black")
+                self.canvas.create_rectangle(x1, y1, x2, y2, outline="black", fill="yellow" if self.answer[col] == 'y' else "green" if self.answer[col] == 'g' else "white")
 
                 text_x, text_y = (x1 + x2) / 2, (y1 + y2) / 2
                 self.canvas.create_text(text_x, text_y, text=letter, font=("Arial", 30), fill="black")
@@ -49,7 +50,7 @@ class Wordle:
                 letter = input_text[col]
                 x1, y1 = col * 50 + 1, self.row_curr * 50 + 1
                 x2, y2 = x1 + 50, y1 + 50
-                self.canvas.create_rectangle(x1, y1, x2, y2, outline="black")
+                self.canvas.create_rectangle(x1, y1, x2, y2, outline="black" ,fill="yellow" if self.answer[col] == 'y' else "green" if self.answer[col] == 'g' else "white")
                 text_x, text_y = (x1 + x2) / 2, (y1 + y2) / 2
                 self.canvas.create_text(text_x, text_y, text=letter, font=("Arial", 30), fill="black")
             self.row_curr += 1
@@ -57,20 +58,44 @@ class Wordle:
                 self.row_curr = 0
                 return True
             return False
-        
+
+    def check_letters(self,  input_text):
+        guess = input_text
+        answer = list("00000")
+        i = 0
+        print(self.word)
+        while(i < 5):
+            search_letter(self.word, guess[i], i, answer)
+            i+=1
+        self.answer = answer
+        print(self.answer)
+        self.j+=1
+        if(self.j == 6):
+            self.j = 0
+        if self.answer == list("ggggg"):
+            self.result_label.config(text="You win!")
+            self.entry.config(state="disabled")
+            self.root.unbind("<Return>")
+        return(False)
+
     def on_enter(self):
-        if(Wordle.j == 0 and Wordle.i == 0):
-           Wordle.word = choose_word();
-        Wordle.i = 0
+        if(self.j == 0 and self.i == 0):
+            self.word = choose_word()
+        self.i = 0
         input_text = self.entry.get()
-        if len(input_text) < 5 or check_guess(input_text) == -1:
-            Wordle.i = 1
-            self.error_label.config(text="Less than 5 chars or not a word!")
+        if input_text == "":
+            self.i = 1
             return
-        print(input_text)
-        Wordle.j = check_letters(Wordle.word, input_text, Wordle.j)
+        if len(input_text) < 5 or check_guess(input_text) == -1:
+            self.i = 1
+            self.error_label.config(text="Not a correct word!")
+            return
+        self.check_letters(input_text)
         self.entry.delete(0, tk.END)
-        self.update_canvas(input_text)
+        if self.update_canvas(input_text) == True:
+            self.result_label.config(text="You lose!")
+            self.entry.config(state="disabled")
+            self.root.unbind("<Return>")
         self.error_label.config(text="")
     def validate_input(self, char, text):
         if len(text) > 5:

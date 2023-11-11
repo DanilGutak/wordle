@@ -31,19 +31,7 @@ def choose_word():
     print(word)
     return(word)
 
-def check_letters(word, input_text, j):
-    guess = input_text
-    answer = list("00000")
-    i = 0
-    print(word)
-    while(i < 5):
-        search_letter(word, guess[i], i, answer)
-        i+=1
-    print (answer)
-    j+=1
-    if(j == 6):
-        j = 0
-    return(j)
+
 
 if __name__ == "__main__":
     main()
