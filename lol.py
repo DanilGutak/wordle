@@ -1,6 +1,13 @@
+from wordle import check_letters
+from wordle import choose_word
+from wordle import check_guess
 import tkinter as tk
 
 class Wordle:
+    j = 0
+    word = "zoomy"
+    i = 0
+
     def __init__(self, root):
         self.root = root
         self.root.title("Wordle")
@@ -52,11 +59,16 @@ class Wordle:
             return False
         
     def on_enter(self):
+        if(Wordle.j == 0 and Wordle.i == 0):
+           Wordle.word = choose_word();
+        Wordle.i = 0
         input_text = self.entry.get()
-        if len(input_text) < 5:
-            self.error_label.config(text="Less than 5 chars!")
+        if len(input_text) < 5 or check_guess(input_text) == -1:
+            Wordle.i = 1
+            self.error_label.config(text="Less than 5 chars or not a word!")
             return
         print(input_text)
+        Wordle.j = check_letters(Wordle.word, input_text, Wordle.j)
         self.entry.delete(0, tk.END)
         self.update_canvas(input_text)
         self.error_label.config(text="")
