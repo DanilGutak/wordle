@@ -60,13 +60,11 @@ class Wordle:
             return False
 
     def check_letters(self,  input_text):
-        guess = input_text
+        guess = list(input_text)
         answer = list("00000")
         i = 0
         print(self.word)
-        while(i < 5):
-            search_letter(self.word, guess[i], i, answer)
-            i+=1
+        search_letter(list(self.word), answer, guess)
         self.answer = answer
         print(self.answer)
         self.j+=1
