@@ -1,15 +1,15 @@
-from wordle import choose_word
-from wordle import check_guess
-from wordle import search_letter
+from words import choose_word
+from words import check_guess
+from words import search_letter
 import tkinter as tk
 from PIL import Image, ImageTk
 
 class Wordle:
     j = 0
-    word = "zoomy"
+    word = ""
     i = 0
     answer = list("00000")
-
+    win_flag = False
     def __init__(self, root):
         self.root = root
         self.root.title("Wordle")
@@ -70,10 +70,10 @@ class Wordle:
 
         self.vic_canvas.itemconfig(self.image_item2, image=self.tk_image)
         self.vic_canvas.itemconfig(self.image_item3, image=self.tk_image)
-        if angle > 360:
-            angle = 0
+        if angle > 1080:
+            return
 
-        self.root.after(5, lambda: self.spin_image(angle + 2))
+        self.root.after(100, lambda: self.spin_image(angle + 35 ))
 
     def update_canvas(self, input_text):
             for col in range(5):
@@ -118,12 +118,10 @@ class Wordle:
         guess = list(input_text)
         answer = list("00000")
         i = 0
-        print(self.word)
-        search_letter(list("abbey"), answer, guess)
+        search_letter(list(self.word), answer, guess)
+        #print(self.word)
         self.answer = answer
         self.j+=1
-        if(self.j == 6):
-            self.j = 0
         if self.answer == list("ggggg"):
             self.result_label.config(text="You win!\n" +"You managed to do it in " +str(self.j) + " guesses.\n" +"Press Enter to restart...", fg = "green")
             self.image_item = self.vic_canvas.create_image(-50, -50, anchor=tk.NW, image=self.tk_image)
@@ -133,7 +131,10 @@ class Wordle:
             self.spin_image()
             self.entry.config(state="disabled")
             self.root.unbind("<Return>")
+            self.win_flag = True
             self.root.bind("<Return>", lambda event: self.restart())
+        if(self.j == 6):
+            self.j = 0
         return(False)
 
     def on_enter(self):
@@ -145,18 +146,19 @@ class Wordle:
         if input_text == "":
             self.i = 1
             return
-        if len(input_text) < 5: #or check_guess(input_text) == -1:
+        if len(input_text) < 5  or check_guess(input_text) == -1:
             self.i = 1
             self.error_label.config(text="Not a dictionary word!")
             return
         self.check_letters(input_text)
         self.entry.delete(0, tk.END)
-        if self.update_canvas(input_text) == True:
+        if self.update_canvas(input_text) == True and self.win_flag == False: 
             self.result_label.config(text="You lose! \n The word was " + self.word.upper() + ".\n " + "Press Enter to restart...", fg = "red")
             self.entry.config(state="disabled")
             self.root.unbind("<Return>")
             self.root.bind("<Return>", lambda event: self.restart())
         self.error_label.config(text="")
+        self.win_flag = False
     def validate_input(self, char, text):
         if len(text) > 5:
             return False
@@ -165,6 +167,7 @@ class Wordle:
         elif not char.isascii():
             return False
         return True
+
 
 def main():
     root = tk.Tk()
