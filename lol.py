@@ -16,6 +16,8 @@ class Wordle:
         self.root.configure(bg="pink")
         self.root.geometry("400x800")
         self.root.resizable(False, False)
+        self.image = tk.PhotoImage(file='/nfs/homes/dgutak/Desktop/WORDLE/cati.png')
+        self.root.iconphoto(False, self.image)
         self.image_item = None
         self.image_item2 = None
         self.image_item3 = None
@@ -68,9 +70,10 @@ class Wordle:
 
         self.vic_canvas.itemconfig(self.image_item2, image=self.tk_image)
         self.vic_canvas.itemconfig(self.image_item3, image=self.tk_image)
+        if angle > 360:
+            angle = 0
 
-
-        self.root.after(50, lambda: self.spin_image(angle + 5))
+        self.root.after(5, lambda: self.spin_image(angle + 2))
 
     def update_canvas(self, input_text):
             for col in range(5):
@@ -118,17 +121,15 @@ class Wordle:
         print(self.word)
         search_letter(list(self.word), answer, guess)
         self.answer = answer
-        print(self.answer)
         self.j+=1
         if(self.j == 6):
             self.j = 0
         if self.answer == list("ggggg"):
-            self.result_label.config(text="You win!\n" +"You managed to do it in " +str(self.j) + " guesses.\n" +"Press Enter to restart.", fg = "green")
+            self.result_label.config(text="You win!\n" +"You managed to do it in " +str(self.j) + " guesses.\n" +"Press Enter to restart...", fg = "green")
             self.image_item = self.vic_canvas.create_image(-50, -50, anchor=tk.NW, image=self.tk_image)
             self.image_item2 = self.vic_canvas.create_image(-30, 70, anchor=tk.NW, image=self.tk_image)
             self.image_item3 = self.vic_canvas.create_image(100, -50, anchor=tk.NW, image=self.tk_image)
             self.image_item4 = self.vic_canvas.create_image(120, 60, anchor=tk.NW, image=self.tk_image)
-
             self.spin_image()
             self.entry.config(state="disabled")
             self.root.unbind("<Return>")
@@ -151,7 +152,7 @@ class Wordle:
         self.check_letters(input_text)
         self.entry.delete(0, tk.END)
         if self.update_canvas(input_text) == True:
-            self.result_label.config(text="You lose! \n The word was " + self.word + ".\n " + "Press Enter to restart.", fg = "red")
+            self.result_label.config(text="You lose! \n The word was " + self.word.upper() + ".\n " + "Press Enter to restart...", fg = "red")
             self.entry.config(state="disabled")
             self.root.unbind("<Return>")
             self.root.bind("<Return>", lambda event: self.restart())
