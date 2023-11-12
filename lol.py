@@ -16,7 +16,7 @@ class Wordle:
         self.root.configure(bg="pink")
         self.root.geometry("400x800")
         self.root.resizable(False, False)
-        self.image = tk.PhotoImage(file='/nfs/homes/dgutak/Desktop/WORDLE/cati.png')
+        self.image = tk.PhotoImage(file='/nfs/homes/dgutak/Desktop/WORDLE/caticon.png')
         self.root.iconphoto(False, self.image)
         self.image_item = None
         self.image_item2 = None
