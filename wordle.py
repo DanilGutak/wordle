@@ -20,8 +20,9 @@ def search_letter(word, answer, guess):
         while(word.count(guess[i]) < (guess.count(guess[i]) - k)):
             while(j >= 0 and (guess[j] != guess[i] or guess[j] == word[j])):
                 j-=1
-            k += 1
             answer[j] = '0'
+            j-=1
+            k += 1
         i += 1
     
 

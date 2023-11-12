@@ -16,7 +16,7 @@ class Wordle:
         self.root.configure(bg="pink")
         self.root.geometry("400x800")
         self.root.resizable(False, False)
-        self.image = tk.PhotoImage(file='/nfs/homes/dgutak/Desktop/WORDLE/caticon.png')
+        self.image = tk.PhotoImage(file='caticon.png')
         self.root.iconphoto(False, self.image)
         self.image_item = None
         self.image_item2 = None
@@ -53,7 +53,7 @@ class Wordle:
         self.result_label = tk.Label(self.frame1, text="", font=("Arial", 16), borderwidth=0, bg="pink", fg = "green")
         self.result_label.pack(pady=20)
 
-        self.original_image = Image.open("/nfs/homes/dgutak/Desktop/WORDLE/cat.png")
+        self.original_image = Image.open("cat.png")
         self.tk_image = ImageTk.PhotoImage(self.original_image)
         self.vic_canvas = tk.Canvas(self.frame1, width=500, height=350, borderwidth=0, bg = "pink", highlightthickness=0)
         self.vic_canvas.pack()
@@ -119,7 +119,7 @@ class Wordle:
         answer = list("00000")
         i = 0
         print(self.word)
-        search_letter(list(self.word), answer, guess)
+        search_letter(list("abbey"), answer, guess)
         self.answer = answer
         self.j+=1
         if(self.j == 6):
@@ -145,7 +145,7 @@ class Wordle:
         if input_text == "":
             self.i = 1
             return
-        if len(input_text) < 5 or check_guess(input_text) == -1:
+        if len(input_text) < 5: #or check_guess(input_text) == -1:
             self.i = 1
             self.error_label.config(text="Not a dictionary word!")
             return
